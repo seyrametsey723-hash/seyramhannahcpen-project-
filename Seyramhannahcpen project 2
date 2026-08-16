@@ -1,0 +1,227 @@
+1. Introduction
+Project 2 develops an API/web service that implements functions from Project 1. The application uses Next.js 14 with the App Router, React, TypeScript, and PostgreSQL. It provides authentication, a protected dashboard, and API routes for students, courses, enrolments, fees, lecturers, and course assignments.
+2. Objectives
+• Develop a Next.js 14 application with registration, login, and dashboard pages.
+• Connect the application to the PostgreSQL database created in Project 1.
+• Expose web-service endpoints for the main database functions.
+• Allow authenticated users to view and manage student, lecturer, enrolment, and fee information.
+• Return the outstanding-fees result from the PostgreSQL function through an API endpoint.
+3. Technologies Used
+Technology / Package
+
+Purpose
+
+Next.js 14
+
+Web application framework and API route handling.
+
+React 18
+
+User interface components.
+
+TypeScript
+
+Application source language.
+
+PostgreSQL
+
+Persistent relational data storage.
+
+pg
+
+Connects the Next.js server to PostgreSQL.
+
+bcryptjs
+
+Hashes and verifies user passwords.
+
+jose
+
+Creates and verifies signed JWT-based sessions.
+
+4. Application Structure
+Component
+
+Purpose
+
+app/api
+
+Contains the web-service routes.
+
+app/login
+
+Provides the user login page.
+
+app/register
+
+Provides the account registration page.
+
+app/dashboard
+
+Protects and displays the main dashboard.
+
+components/DashboardClient.tsx
+
+Loads API data and provides the dashboard interface.
+
+lib/db.ts
+
+Creates the PostgreSQL connection pool.
+
+lib/auth.ts
+
+Creates, verifies, and clears authenticated sessions.
+
+5. Authentication
+The application provides registration, login, and logout functions. Registration requires a name, email, and password of at least eight characters. The application hashes passwords with bcryptjs before storing them. Login verifies the supplied password against the stored hash. After successful authentication, the application creates a signed session cookie. The dashboard checks this session and redirects unauthenticated users to the login page.
+6. API/Web Service
+Endpoint
+
+Method
+
+Function
+
+/api/students
+
+GET
+
+Returns student personal information.
+
+/api/students
+
+POST
+
+Creates a student record.
+
+/api/students
+
+DELETE
+
+Removes a student record.
+
+/api/lecturers
+
+GET
+
+Returns lecturer information.
+
+/api/lecturers
+
+POST
+
+Creates a lecturer record.
+
+/api/lecturers
+
+DELETE
+
+Removes a lecturer record.
+
+/api/courses
+
+GET
+
+Returns course information.
+
+/api/enrollments
+
+GET
+
+Returns student-course enrolments.
+
+/api/enrollments
+
+POST
+
+Enrols a student in a course.
+
+/api/enrollments
+
+PATCH
+
+Updates enrolment status.
+
+/api/enrollments
+
+DELETE
+
+Removes an enrolment.
+
+/api/fees
+
+GET
+
+Returns fee invoices, payments, and balances.
+
+/api/fees
+
+POST
+
+Records a fee payment.
+
+/api/fees
+
+PATCH
+
+Updates a fee payment.
+
+/api/fees
+
+DELETE
+
+Deletes a fee payment.
+
+/api/fees/outstanding
+
+GET
+
+Calls the PostgreSQL outstanding-fees function.
+
+/api/assignments
+
+GET
+
+Returns lecturer and TA course assignments.
+
+/api/assignments
+
+POST
+
+Assigns a lecturer or TA to a course.
+
+7. Dashboard Functions
+• Displays the number of students and lecturers.
+• Displays students' personal information and supports adding or removing student records.
+• Displays lecturers and supports adding or removing lecturer records.
+• Displays available courses.
+• Displays enrolments and supports creating, updating, and removing enrolments.
+• Displays outstanding fees and fee payment records.
+• Supports recording, updating, and deleting fee payments.
+• Provides logout functionality.
+8. Database Integration
+The application uses the pg package to connect to PostgreSQL through a connection pool. The database connection reads DATABASE_URL from the environment. API routes query the cpen208 schema directly. The outstanding-fees route calls cpen208.get_outstanding_fees(), so the application reuses the database function created in Project 1 rather than duplicating the calculation in TypeScript.
+9. Input Validation and Error Handling
+The API validates required fields before sending database requests. It checks conditions such as missing student IDs, missing course codes, invalid enrolment statuses, invalid payment amounts, and duplicate records. The fee API also maps common PostgreSQL errors to clearer messages, including duplicate payment references, invalid payment amounts, and missing foreign-key records.
+10. Assumptions and Configuration
+• The application uses the PostgreSQL database named cpen208.
+• DATABASE_URL stores the database connection string.
+• JWT_SECRET stores the secret used to sign sessions.
+• The local .env.local file remains private and should not be committed to GitHub.
+• The .env.example file documents the required environment variables without exposing private credentials.
+11. Running the Application
+• Create the PostgreSQL database and run the Project 1 schema and seed scripts.
+• Set DATABASE_URL and JWT_SECRET in the local environment file.
+• Run npm install to install the project dependencies.
+• Run npm run dev to start the Next.js development server.
+• Open the application at http://localhost:3000.
+• Register an account, log in, and use the protected dashboard.
+12. Verification
+The source code contains separate API routes for the main Project 1 functions and includes the required registration, login, and dashboard pages. The generated Next.js build files in the submitted project also show that the application has been built locally. The API routes include validation and database error handling to support normal and invalid input cases.
+13. Submission Contents
+• Next.js application source code.
+• Database creation and seed scripts.
+• PostgreSQL database backup.
+• Project report in PDF/Word form as required by the submission arrangement.
+• GitHub repository containing the source code.
+14. Conclusion
+Project 2 connects the Project 1 database to a functional web application and API. The implementation provides authentication, protected access, database-backed API routes, fee management, course enrolment, staff management, and outstanding-fee reporting. It therefore provides the web-service layer required to use the functions developed in Project 1.

@@ -1,0 +1,113 @@
+1. Introduction
+Project 1 develops a relational database for a Computer Engineering student management system. The database supports student personal information, fee payments, course enrolment, lecturer-to-course assignments, and teaching-assistant assignments. PostgreSQL provides the database platform, as required by the project brief.
+
+2. Objectives
+• Create a PostgreSQL database and the required cpen208 schema.
+• Create tables that support the required student, course, staff, enrolment, and fee functions.
+• Populate the database with sample class data.
+• Create a function that calculates each student's outstanding fees and returns the result as a JSON array.
+• Provide SQL scripts and a database backup that can reproduce the database.
+3. Technologies Used
+Technology
+
+Purpose
+
+PostgreSQL
+
+Relational database management system.
+
+SQL / PLpgSQL
+
+Database definition, sample data, constraints, views, indexes, and the outstanding-fees function.
+
+4. Database Design
+The database uses the cpen208 schema. Primary keys identify records, while foreign keys connect related tables. Unique constraints prevent duplicate relationships and duplicate identifiers where required. Check constraints also restrict fields such as account status, enrolment status, credit hours, and payment amounts.
+
+Table
+
+Purpose
+
+students
+
+Stores student personal information, department, email, and account status.
+
+lecturers
+
+Stores lecturer details.
+
+teaching_assistants
+
+Identifies students who serve as teaching assistants.
+
+courses
+
+Stores course code, name, credit hours, semester, and academic year.
+
+course_enrollments
+
+Links students to courses.
+
+course_lecturers
+
+Links lecturers to courses.
+
+course_tas
+
+Links teaching assistants to courses.
+
+fee_invoices
+
+Stores amounts due for students.
+
+fee_payments
+
+Stores payments made against invoices.
+
+app_users
+
+Stores application account details and password hashes for Project 2.
+
+5. Sample Data
+The seed script loads 70 student records. It also creates four lecturers, twelve teaching assistants, six courses, lecturer and TA assignments, course enrolments, fee invoices, and fee payments. The student records use the supplied student IDs and names. Because the supplied student data does not provide email addresses, the project generates student email addresses from student IDs as a project assumption.
+
+6. Outstanding Fees Function
+The database defines get_outstanding_fees(), a PL/pgSQL function that calculates the total amount due, total amount paid, and outstanding balance for every student. The function uses aggregated invoice and payment data and prevents a negative outstanding balance by applying a minimum value of zero. It returns the result as JSONB, which allows the web service to send the data directly to the application.
+
+7. Supporting Database Features
+• The student_fee_summary view provides a summarized fee position for each student.
+• Indexes support common searches on student IDs in enrolments, payments, and invoices.
+• Foreign keys maintain relationships between students, courses, staff, enrolments, invoices, and payments.
+• Unique constraints prevent duplicate student-course, lecturer-course, and TA-course assignments.
+• The cpen208_backup.sql file provides a database backup for restoration and submission.
+8. SQL Scripts
+File
+
+Function
+
+00_create_database.sql
+
+Creates the cpen208 PostgreSQL database.
+
+01_schema.sql
+
+Creates the schema, tables, constraints, indexes, view, and outstanding-fees function.
+
+02_seed.sql
+
+Loads the sample records and demonstrates the required relationships.
+
+cpen208_backup.sql
+
+Provides a PostgreSQL backup of the completed database.
+
+9. Assumptions
+• The database uses the name cpen208.
+• The project uses the cpen208 schema for the application tables.
+• Student emails are generated from student IDs because the supplied student data does not include email addresses.
+• Sample lecturers, courses, teaching assistants, assignments, invoices, and payments demonstrate the required relationships.
+• The first-semester fee data provides sample values for testing the outstanding-fees calculation.
+10. Verification
+The database scripts define all required tables and relationships, populate the sample data, and create the required outstanding-fees function. The seed script also includes a query for checking the JSON output from get_outstanding_fees(). The resulting database backup preserves the implemented database structure and data for reproduction.
+
+11. Conclusion
+Project 1 delivers the required PostgreSQL database for the student management system. The design separates students, courses, staff assignments, enrolments, and financial records into related tables. The project also provides sample data, integrity constraints, supporting indexes and a JSON-returning outstanding-fees function. These database features form the foundation for the API and web application developed in Project 2.
